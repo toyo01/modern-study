@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Counter</title>
+    <?!= HtmlService.createHtmlOutputFromFile('stylesCss').getContent() ?>
+  </head>
+  <body>
+    <div id="container">
+      <div id="board"></div>
+      <div id="countUpBtn">1UP</div>
+      <div id="saveBtn">Save Data</div>
+      <div id="displayBtn">Display saved data</div>
+    </div>
+    <?!= HtmlService.createHtmlOutputFromFile('main').getContent() ?>
+  </body>
+</html>
