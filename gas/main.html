@@ -56,34 +56,42 @@
   }
 
   class Counter {
+    
     constructor() {
+      new Vue({
+        el: "#container",
+        vuetify: new Vuetify(),
+        data: {},
+        methods: {
+          // カウントボタン
+          countUpBtnClicked(){
+            // カウンターを一つ上げる
+            thisCounter.countUp()
+            // ボードに値表示
+            thisCounter.board.activate()
+          },
+          // 保存ボタン
+          saveBtnClicked(){
+            // スプレッドシートに現在のカウント数保存
+            google.script.run.saveValue(thisCounter.count)
+          },
+          // 表示ボタン
+          displayBtnClicked(){
+            // スプレッドシートに保存していた値を取得して表示
+            google.script.run.withSuccessHandler(thisCounter.board.onSuccess).displayValue()
+          }
+        },
+        mounted() {}
+      })
+
       this.board = new Board(this)
+      const thisCounter = this
 
       // カウントボタン
       const countUpBtn = document.getElementById('countUpBtn')
       google.script.run.withSuccessHandler(this.board.onSuccess).displayValue()
 
-      countUpBtn.addEventListener('click', () => {
-        // カウンターを一つ上げる
-        this.countUp()
-        // ボードに値表示
-        this.board.activate()
-      })
       this.setup()
-
-      // 保存ボタン
-      const saveBtn = document.getElementById('saveBtn')
-      saveBtn.addEventListener('click', () => {
-        // スプレッドシートに現在のカウント数保存
-        google.script.run.saveValue(this.count)
-      })
-
-      // 表示ボタン
-      const displayBtn = document.getElementById('displayBtn')
-      displayBtn.addEventListener('click', () => {
-        // スプレッドシートに保存していた値を取得して表示
-        google.script.run.withSuccessHandler(this.board.onSuccess).displayValue()
-      })
 
     }
 
