@@ -12,17 +12,57 @@
   <body>
     <div id="container">
       <v-app style="background: #ccc">
-
-        <v-row justify="center" class="mb-20" style="height: 220; flex: none; margin-top: 20px; margin-bottom: 8px;">
-          <v-card height="170" width="170" color="#a3ffed">
-            <div><v-btn height="140" width="140" class="title blue--text text--darken-4 mx-auto my-4 font-weight-bold" color="#00aaff" style="display: block !important; list-style: none;" id="board" fab></v-btn></div>
+        <v-row
+          justify="center"
+          class="mb-20"
+          style="height: 220; flex: none; margin-top: 20px; margin-bottom: 8px;"
+        >
+          <v-card
+            height="170"
+            width="170"
+            color="#a3ffed"
+          >
+          <!-- リセットボタン -->
+          <v-btn
+              height="140"
+              width="140"
+              class="title blue--text text--darken-4 mx-auto my-4 font-weight-bold"
+              color="#00aaff"
+              style="display: block !important; list-style: none;"
+              @click="resetBtnClicked"
+              id="board"
+              fab
+            ></v-btn>
           </v-card>
         </v-row>
-
-        <v-btn height="50" width="170" class="title deep-purple--text text--accent-4 mx-auto my-1 font-weight-bold" color="#ffadef" style="text-transform: none;" @click="countUpBtnClicked" id="countUpBtn">1UP</v-btn>
-        <v-btn height="50" width="170" class="title deep-purple--text text--accent-4 mx-auto my-1 font-weight-bold" color="#c7ffad" style="text-transform: none;" @click="saveBtnClicked" id="saveBtn">Save Data</v-btn>
-        <v-btn height="80" width="170" class="title deep-purple--text text--accent-4 mx-auto my-1 font-weight-bold" color="#fcaf17" style="text-transform: none;" @click="displayBtnClicked" id="displayBtn">Display<br>saved data</v-btn>
-
+        <!-- カウントボタン -->
+        <v-btn
+          height="50"
+          width="170"
+          class="title deep-purple--text text--accent-4 mx-auto my-1 font-weight-bold"
+          color="#ffadef"
+          style="text-transform: none;"
+          @click="countUpBtnClicked" id="countUpBtn"
+        >1UP</v-btn>
+        <!-- 保存ボタン -->
+        <v-btn
+          height="50"
+          width="170"
+          class="title deep-purple--text text--accent-4 mx-auto my-1 font-weight-bold"
+          color="#c7ffad" style="text-transform: none;"
+          @click="saveBtnClicked"
+          id="saveBtn"
+        >Save Data</v-btn>
+        <!-- 表示ボタン -->
+        <v-btn
+          height="80"
+          width="170"
+          class="title deep-purple--text text--accent-4 mx-auto my-1 font-weight-bold"
+          color="#fcaf17"
+          style="text-transform: none;"
+          @click="displayBtnClicked"
+          id="displayBtn"
+        >Display<br>saved data</v-btn>
       </v-app>
     </div>
     <?!= HtmlService.createHtmlOutputFromFile('main').getContent() ?>

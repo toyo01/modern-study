@@ -7,9 +7,6 @@
       this.el = document.createElement('li')
       this.el.classList.add('pressed')
       this.el.textContent = 'Reset'
-      this.el.addEventListener('click', () => {
-        this.check()
-      })
     }
 
     getEl() {
@@ -79,6 +76,11 @@
           displayBtnClicked(){
             // スプレッドシートに保存していた値を取得して表示
             google.script.run.withSuccessHandler(thisCounter.board.onSuccess).displayValue()
+          },
+          // リセットボタン
+          resetBtnClicked(){
+            // カウントの表示をリセット　
+            thisCounter.board.panel.check()
           }
         },
         mounted() {}
