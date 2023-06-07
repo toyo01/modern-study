@@ -21,7 +21,7 @@ function saveValue( countNo ) {
  * スプレッドシートに保存されていた値を取得する
  * @returns スプレッドシートに保存されていた値
  */
-function displayValue() {
+function getNumber() {
   // スプレッドシートのデータを取得
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet()
   const data_values = spreadsheet.getActiveSheet().getRange("A2").getValues()

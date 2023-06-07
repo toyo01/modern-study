@@ -1,71 +1,35 @@
 <script>
 'use strict'
 {
-  class Panel {
-    constructor(counter) {
-      this.counter = counter
-      this.el = document.createElement('li')
-      this.el.classList.add('pressed')
-      this.el.textContent = 'Reset'
-    }
-
-    getEl() {
-      return this.el
-    }
-
-    activate(num) {
-      this.el.classList.remove('pressed')
-      this.el.textContent = num
-    }
-
-    check() {
-        this.el.classList.add('pressed')
-        this.counter.countClear()
-        this.el.textContent = 'Clear!'
-    }
-
-  }
-
-  class Board {
-    constructor(counter) {
-      this.counter = counter
-      this.panel = new Panel(this.counter)
-      this.setup()
-    }
-
-    setup() {
-      const board = document.getElementById('board')
-      board.appendChild(this.panel.getEl())
-    }
-
-    activate() {
-      this.panel.activate(this.counter.getCount())
-    }
-
-    onSuccess = (value) => {
-        this.count = value
-        // 現在のカウントを更新
-        this.counter.countUpdate(value)
-        // 画面に表示
-        this.activate()
-    }
-
-  }
-
   class Counter {
     
     constructor() {
-      new Vue({
+      const thisCounter = this
+
+      const ServerScript = new Promise(
+        ( resolve ) => {
+          google.script.run.withSuccessHandler( resolve ).getNumber()
+        }
+      );
+      (async ()=> {
+        thisCounter.count = await ServerScript
+        // スプレッドジートから取得した値で表示を上書き
+        app.cntDysplay(thisCounter.count)
+      })();
+
+      const app = new Vue({
         el: "#container",
         vuetify: new Vuetify(),
-        data: {},
+        data: {
+          currentValue: 'RESET!'
+        },
         methods: {
           // カウントボタン
           countUpBtnClicked(){
             // カウンターを一つ上げる
             thisCounter.countUp()
             // ボードに値表示
-            thisCounter.board.activate()
+             this.currentValue = thisCounter.getCount()
           },
           // 保存ボタン
           saveBtnClicked(){
@@ -75,30 +39,26 @@
           // 表示ボタン
           displayBtnClicked(){
             // スプレッドシートに保存していた値を取得して表示
-            google.script.run.withSuccessHandler(thisCounter.board.onSuccess).displayValue()
+            google.script.run.withSuccessHandler(this.cntDysplay).getNumber()
           },
           // リセットボタン
           resetBtnClicked(){
             // カウントの表示をリセット　
-            thisCounter.board.panel.check()
+            thisCounter.countClear()
+            // ボードに「Clear!」と表示
+             this.currentValue = 'Clear!'
+          },
+          // 画面表示
+          cntDysplay(value){
+            thisCounter.count = value
+            // 現在のカウントを更新
+            thisCounter.countUpdate(value)
+            // 画面に表示
+            this.currentValue = value
           }
         },
         mounted() {}
       })
-
-      this.board = new Board(this)
-      const thisCounter = this
-
-      // カウントボタン
-      const countUpBtn = document.getElementById('countUpBtn')
-      google.script.run.withSuccessHandler(this.board.onSuccess).displayValue()
-
-      this.setup()
-
-    }
-
-    setup() {
-      const container = document.getElementById('container')
     }
 
     countUp() {
