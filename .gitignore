@@ -3,6 +3,7 @@ node_modules
 
 # package file
 package-lock.json
+config.json.html
 
 # clasp file
 .clasp.json
