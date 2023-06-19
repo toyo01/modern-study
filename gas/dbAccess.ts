@@ -18,20 +18,12 @@ function updateCounter( countNo ) {
   const conn = Jdbc.getCloudSqlConnection(CONNECT_URL, USER_ID, USER_PASSWORD)
   const statement = conn.createStatement()
 
-  // counterテーブルにデータの登録があるか確認
-  const count = getCounter()
-
-  let sql
-  if (count) {
-    // データがある場合、更新用のSQLを作成
-    sql = 'UPDATE counter SET count = ' + countNo + ', updated_at = cast( now() as datetime ) WHERE index_no = 1'
-  } else {
-    // データがない場合、登録用のSQLを作成
-    sql = 'INSERT INTO counter (index_no, count , updated_at) VALUES (1, ' + countNo + ', cast( now() as datetime ))'
-  }
+  // 'index_no'が1のデータついて、データがある場合は更新、ない場合は登録をおこなう
+  const sql = 'INSERT INTO counter (index_no, count , updated_at) VALUES (1, ' + countNo + ', cast( now() as datetime ))' +
+    ' ON DUPLICATE KEY UPDATE count = ' + countNo + ', updated_at = cast( now() as datetime )'
 
   // counterテーブル更新
-  statement.executeQuery(sql)
+  statement.executeUpdate(sql)
 
   // DB接続を終了する
   statement.close()
