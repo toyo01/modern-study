@@ -2,26 +2,14 @@
 'use strict'
 {
   class Counter {
-    
     constructor() {
       const thisCounter = this
-
-      const ServerScript = new Promise(
-        ( resolve ) => {
-          google.script.run.withSuccessHandler( resolve ).getNumber()
-        }
-      );
-      (async ()=> {
-        thisCounter.count = await ServerScript
-        // スプレッドジートから取得した値で表示を上書き
-        app.cntDysplay(thisCounter.count)
-      })();
-
       const app = new Vue({
         el: "#container",
         vuetify: new Vuetify(),
         data: {
-          currentValue: 'RESET!'
+          currentValue: 'RESET!',
+          overlay: false
         },
         methods: {
           // カウントボタン
@@ -32,14 +20,24 @@
              this.currentValue = thisCounter.getCount()
           },
           // 保存ボタン
-          saveBtnClicked(){
-            // スプレッドシートに現在のカウント数保存
-            google.script.run.saveValue(thisCounter.count)
+          async saveBtnClicked(){
+            app.setOverlay()
+            const ServerScript = new Promise(( resolve ) => {
+              // counterテーブルに現在のカウント数保存
+              google.script.run.withSuccessHandler( resolve ).updateCounter(thisCounter.count)
+            })
+            await ServerScript
+            app.setOverlay()
           },
           // 表示ボタン
-          displayBtnClicked(){
-            // スプレッドシートに保存していた値を取得して表示
-            google.script.run.withSuccessHandler(this.cntDysplay).getNumber()
+          async displayBtnClicked(){
+            app.setOverlay()
+            const ServerScript = new Promise(( resolve ) => {
+              // スプレッドシートに保存していた値を取得
+              google.script.run.withSuccessHandler( resolve ).getCounter()
+            })
+            const value = await ServerScript
+            this.cntDysplay(value)
           },
           // リセットボタン
           resetBtnClicked(){
@@ -55,10 +53,19 @@
             thisCounter.countUpdate(value)
             // 画面に表示
             this.currentValue = value
+            app.setOverlay()
+          },
+          // オーバーレイの表示・非表示
+          setOverlay(){
+            this.overlay = !this.overlay
           }
         },
         mounted() {}
       })
+
+      // 初期表示
+      app.displayBtnClicked()
+
     }
 
     countUp() {

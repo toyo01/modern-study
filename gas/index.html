@@ -12,6 +12,16 @@
   <body>
     <div id="container">
       <v-app style="background: #ccc">
+        <v-overlay
+          :value="overlay"
+          class="align-center justify-center"
+        >
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            size="64"
+          ></v-progress-circular>
+        </v-overlay>
         <v-row
           justify="center"
           class="mb-20"
