@@ -20,32 +20,24 @@
              this.currentValue = thisCounter.getCount()
           },
           // 保存ボタン
-          saveBtnClicked(){
+          async saveBtnClicked(){
             app.setOverlay()
-            const ServerScript = new Promise(
-              ( resolve ) => {
-                // counterテーブルに現在のカウント数保存
-                google.script.run.withSuccessHandler( resolve ).updateCounter(thisCounter.count)
-              }
-            );
-            (async ()=> {
-              await ServerScript
-              app.setOverlay()
-            })();
+            const ServerScript = new Promise(( resolve ) => {
+              // counterテーブルに現在のカウント数保存
+              google.script.run.withSuccessHandler( resolve ).updateCounter(thisCounter.count)
+            })
+            await ServerScript
+            app.setOverlay()
           },
           // 表示ボタン
-          displayBtnClicked(){
+          async displayBtnClicked(){
             app.setOverlay()
-            const ServerScript = new Promise(
-              ( resolve ) => {
-                // スプレッドシートに保存していた値を取得
-                google.script.run.withSuccessHandler( resolve ).getCounter()
-              }
-            );
-            (async ()=> {
-              const value = await ServerScript
-              this.cntDysplay(value)
-            })();
+            const ServerScript = new Promise(( resolve ) => {
+              // スプレッドシートに保存していた値を取得
+              google.script.run.withSuccessHandler( resolve ).getCounter()
+            })
+            const value = await ServerScript
+            this.cntDysplay(value)
           },
           // リセットボタン
           resetBtnClicked(){
